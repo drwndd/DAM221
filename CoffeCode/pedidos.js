@@ -1,61 +1,109 @@
-let opcion = 3;
-let producto = "Jocho";
-let precio = 65;
-let cantidad = 2;
-let total = precio * cantidad;
+let readline = require('readline');
+let teclado = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
 
-function mostrarMenu(){
+let producto = "";
+let precio = 0;
+let cantidad = 0;
+let total = 0;
+
+function mostrarMenu() {
     console.log(`
-
-        Sistema de Pedidos
-        1. Consultar Productos
+        SISTEMA DE PEDIDOS
+        1. Consultar productos
         2. Crear pedido
-        3. Listar pedido
+        3. Listar pedidos
         4. Salir
-    `);
-}
+        `);
 
-function consultarProductos(){
-    console.log(`
-        Productos disponibles:
-        1. Jocho $65
-        2. Monster $39
-        3. Chettos Flamin´ Hot $25
-    `);
-}
+        teclado.question("Seleccione una opción: ", function(opcion) {
 
-function crearPedido(){
-    console.log(`
-        Pedido Creado jejs
-        Producto: ${producto}
-        Precio: $${precio}
-        Cantidad: ${cantidad}
-        Total: $${total}
-    `);
-}
-
-function listarPedido(){
-    console.log(`
-        Lista de pedidos:
-        Producto: ${producto}
-        Precio: $${precio}
-        Cantidad: ${cantidad}
-        Total: $${total}
-    `);
-}
-
-mostrarMenu();
-
-if(opcion == 1) {
+    if (opcion == "1") {
     consultarProductos();
-} else if(opcion == 2) {
+    mostrarMenu();
+
+    } else if (opcion == "2") {
     crearPedido();
-} else if(opcion == 3) {
-    listarPedido();
+
+    } else if (opcion == "3") {
+    listarPedidos();
+    mostrarMenu();
+
+    } else if (opcion == "4") {
+    console.log("Saliendo del sistema...");
+    teclado.close();
+
+    } else {
+    console.log("Opción inválida.");
+    mostrarMenu();
 }
- else if(opcion == 4) {
-    console.log("Programa cerrado");
+
+        });
 }
- else {
-    console.log("Opcin inválida");
-} 
+
+function consultarProductos() {
+    console.log(`
+        PRODUCTOS DISPONIBLES
+        1. Sabritas - $25
+        2. Jocho - $65
+        3. Matiburguer - $105
+        `);
+    
+}
+function crearPedido() {
+    consultarProductos();
+
+    teclado.question("Seleccione un producto: ", function(opcionProducto) {
+        if (opcionProducto == "1") {
+    producto = "Sabritas";
+    precio = 25;
+
+} else if (opcionProducto == "2") {
+    producto = "Jocho";
+    precio = 65;
+
+} else if (opcionProducto == "3") {
+    producto = "Matiburguer";
+    precio = 105;
+
+} else {
+    console.log("Producto inválido.");
+    mostrarMenu();
+    return;
+}
+
+        teclado.question("Ingrese la cantidad: ", function(cantidadIngresada) {
+            
+            cantidad = cantidadIngresada;
+            total = precio * cantidad;
+
+            console.log(`
+                PEDIDO CREADO
+                producto: ${producto}
+                precio unitario: $${precio}
+                cantidad: ${cantidad}
+                Total: $${total}
+            `);
+
+            mostrarMenu();
+        });
+    });
+}
+            function listarPedidos() {
+
+                if (producto == "") {
+                    console.log("No hay pedidos registrados.");
+                } else {
+                    console.log(`
+                        PEDIDO GUARDADO
+                        producto: ${producto}
+                        precio: $${precio}
+                        cantidad: ${cantidad}
+                        Total: $${total}
+                    `);
+                }
+            }
+        mostrarMenu();
+             
