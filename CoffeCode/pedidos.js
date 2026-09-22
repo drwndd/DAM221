@@ -10,9 +10,9 @@ let cantidad = 0;
 let total = 0;
 
 let productos = [
-    { nombre: "Sabritas", precio: 25 },
-    { nombre: "Jocho", precio: 65 },
-    { nombre: "Matiburguer", precio: 105 }
+    { nombre: "Sabritas", precio: 25, descuento: 10, disponible: true},
+    { nombre: "Jocho", precio: 65, descuento: 15, disponible: true},
+    { nombre: "Matiburguer", precio: 105, descuento: 20, disponible: false}
 ];
 
 let pedidos = [];
@@ -89,7 +89,7 @@ function consultarPromociones() {
         
             if (productos[i].disponible == true) {
                  console.log(`
-                Producto: ${productos[i].nombre}
+                Producto: ${productos[i].nombre} 
                 Precio original: $${productos[i].precio}
                 Descuento: ${productos[i].descuento}%
                 Precio final: $${promociones[i]}
@@ -105,54 +105,86 @@ function crearPedido() {
     consultarProductos();
 
     teclado.question("Seleccione un producto: ", function(opcionProducto) {
-        if (opcionProducto == "1") {
-    producto = "Sabritas";
-    precio = 25;
+        let indice = Number(opcionProducto) - 1;
 
-} else if (opcionProducto == "2") {
-    producto = "Jocho";
-    precio = 65;
+        if (indice < 0 || indice >= productos.length || opcionProducto == "") {
 
-} else if (opcionProducto == "3") {
-    producto = "Matiburguer";
-    precio = 105;
+            console.log("Producto invalido");
+            mostrarMenu();
+            return;
+        }
 
-} else {
-    console.log("Producto inválido.");
-    mostrarMenu();
-    return;
-}
+        if (productos[indice].disponible == false) {
+
+            console.log("Producto invalido.");
+            mostrarMenu();
+            return;
+        }
+        producto = productos[indice].nombre;
+        precio = productos[indice].precio;
+
 
         teclado.question("Ingrese la cantidad: ", function(cantidadIngresada) {
             
-            cantidad = cantidadIngresada;
-            total = precio * cantidad;
+            cantidad = number(cantidadIngresada);
+
+            if(cantidad <= 0 || cantidad  % 1 != 0 ) {
+               console.log("Cantidad invalida");
+               mostrarMenu();
+               return;
+            }   
+
+            let subtotal = precio * cantidad;
+            let descuento = subtotal * productos[indice].descuento / 100;
+            total = subtotal - descuento;
+
+            let pedido = {
+                producto: producto,
+                precio: precio,
+                cantidad: cantidad,
+                descuento:descuento,
+                total: total
+            };
+
+            pedidos.push(pedido);
 
             console.log(`
                 PEDIDO CREADO
+
                 producto: ${producto}
                 precio unitario: $${precio}
                 cantidad: ${cantidad}
+                subtotal: $${subtotal}
+                descuento: $${descuento}
                 Total: $${total}
+        
             `);
 
             mostrarMenu();
         });
     });
 }
-            function listarPedidos() {
+        function listarPedidos() {
+            if (pedidos.length == 0) {
+                console.log("No hay pedidos registrados.");
+            }else {
+                console.log(`
+                Pedidos Registrados
+                `);
 
-                if (pedidos.length === 0) {
-                    console.log("No hay pedidos registrados.");
-                } else {
+                pedidos.forEach(function(pedido, i) {
                     console.log(`
-                        PEDIDO GUARDADO
-                        producto: ${producto}
-                        precio: $${precio}
-                        cantidad: ${cantidad}
-                        Total: $${total}
+                    Pedido ${i + 1}
+
+                    producto: ${pedido.producto}
+                    precio: $${pedido.precio}
+                    cantidad : ${pedido.cantidad}
+                    descuento: ${pedido.descuento}
+                    total: $${pedido.total}
                     `);
-                }
+                });
             }
-        
-             
+        }
+
+        mostrarMenu();
+            
