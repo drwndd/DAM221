@@ -9,13 +9,22 @@ let precio = 0;
 let cantidad = 0;
 let total = 0;
 
+let productos = [
+    { nombre: "Sabritas", precio: 25 },
+    { nombre: "Jocho", precio: 65 },
+    { nombre: "Matiburguer", precio: 105 }
+];
+
+let pedidos = [];
+
 function mostrarMenu() {
     console.log(`
         SISTEMA DE PEDIDOS
         1. Consultar productos
         2. Crear pedido
         3. Listar pedidos
-        4. Salir
+        4. Ver promociones
+        5. Salir
         `);
 
         teclado.question("Seleccione una opción: ", function(opcion) {
@@ -32,13 +41,14 @@ function mostrarMenu() {
     mostrarMenu();
 
     } else if (opcion == "4") {
-    console.log("Saliendo del sistema...");
+    
+        consultarPromociones();
+        mostrarMenu();  
+} else if (opcion == "5") {
+    console.log("Saliendo");
     teclado.close();
-
-    } else {
-    console.log("Opción inválida.");
-    mostrarMenu();
 }
+
 
         });
 }
@@ -46,12 +56,51 @@ function mostrarMenu() {
 function consultarProductos() {
     console.log(`
         PRODUCTOS DISPONIBLES
-        1. Sabritas - $25
-        2. Jocho - $65
-        3. Matiburguer - $105
         `);
-    
+         productos.forEach(function(producto, i) {
+
+        if (producto.disponible == true) {
+
+            console.log(
+                (i + 1) + ". " +
+                producto.nombre +
+                " - $" + producto.precio
+            );
+          } else {
+            console.log(
+                (i + 1) + ". " +
+                producto.nombre +
+                " - No disponible"
+            );
+          }
+        });
 }
+function consultarPromociones() {
+    console.log(`
+        Promociones disponibles
+        `);
+        let promociones = productos.map(function(producto) {
+
+            let precioFinal = producto.precio - (producto.precio * producto.descuento / 100);
+            return precioFinal;
+        });
+
+        for (let i = 0; i < productos.length; i++) {
+        
+            if (productos[i].disponible == true) {
+                 console.log(`
+                Producto: ${productos[i].nombre}
+                Precio original: $${productos[i].precio}
+                Descuento: ${productos[i].descuento}%
+                Precio final: $${promociones[i]}
+            `);
+
+        }
+
+    }
+
+}
+          
 function crearPedido() {
     consultarProductos();
 
@@ -93,7 +142,7 @@ function crearPedido() {
 }
             function listarPedidos() {
 
-                if (producto == "") {
+                if (pedidos.length === 0) {
                     console.log("No hay pedidos registrados.");
                 } else {
                     console.log(`
@@ -105,5 +154,5 @@ function crearPedido() {
                     `);
                 }
             }
-        mostrarMenu();
+        
              
