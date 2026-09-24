@@ -25,6 +25,7 @@ function mostrarMenu() {
         3. Listar pedidos
         4. Ver promociones
         5. Salir
+        6. Cancelar Pedido
         `);
 
         teclado.question("Seleccione una opción: ", function(opcion) {
@@ -47,6 +48,8 @@ function mostrarMenu() {
 } else if (opcion == "5") {
     console.log("Saliendo");
     teclado.close();
+} else if (opcion == "6") {
+    cancelarPedido();
 }
 
 
@@ -126,7 +129,7 @@ function crearPedido() {
 
         teclado.question("Ingrese la cantidad: ", function(cantidadIngresada) {
             
-            cantidad = number(cantidadIngresada);
+            cantidad = Number(cantidadIngresada);
 
             if(cantidad <= 0 || cantidad  % 1 != 0 ) {
                console.log("Cantidad invalida");
@@ -144,6 +147,7 @@ function crearPedido() {
                 cantidad: cantidad,
                 descuento:descuento,
                 total: total
+                estado: "Pedido Recibido"
             };
 
             pedidos.push(pedido);
